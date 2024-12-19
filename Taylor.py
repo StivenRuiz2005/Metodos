@@ -79,7 +79,13 @@ def calcular_taylor():
 # Configuración de la ventana principal
 ventana = ctk.CTk()
 ventana.title("Aproximación de Series de Taylor")
-ventana.geometry("1000x600")  # Ajustado para dar espacio para la tabla
+
+# Obtener las dimensiones de la pantalla para hacer la ventana de pantalla completa
+pantalla_ancho = ventana.winfo_screenwidth()
+pantalla_alto = ventana.winfo_screenheight()
+
+# Establecer el tamaño de la ventana a pantalla completa
+ventana.geometry(f"{pantalla_ancho}x{pantalla_alto}+0+0")
 
 # Frame de entradas
 frame_entradas = ctk.CTkFrame(ventana)
