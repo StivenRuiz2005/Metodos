@@ -49,12 +49,13 @@ def calcular_taylor():
             errores_reales.append(error_real)
             errores_relativos.append(error_relativo)
 
-        # Mostrar resultados en consola con 10 decimales
-        resultados = [
-            [k, f"{valores_aproximados[k - 1]:.7f}", f"{errores_reales[k - 1]:.10f}", f"{errores_relativos[k - 1]:.10f}%"]
+        # Mostrar resultados en la tabla en la interfaz gráfica con 10 decimales
+        tabla_resultados = [
+            f"{k} | {valores_aproximados[k - 1]:.10f} | {errores_reales[k - 1]:.10f} | {errores_relativos[k - 1]:.10f}%"
             for k in range(1, n + 1)
         ]
-        print(tabulate(resultados, headers=["n", "Valor Aproximado", "Error Real", "Error Relativo (%)"]))
+        # Usando configure en lugar de config
+        etiqueta_resultado.configure(text="\n".join(tabla_resultados))
 
         # Graficar los errores y aproximaciones
         fig, ax = plt.subplots(figsize=(8, 5))
@@ -78,7 +79,7 @@ def calcular_taylor():
 # Configuración de la ventana principal
 ventana = ctk.CTk()
 ventana.title("Aproximación de Series de Taylor")
-ventana.geometry("900x600")
+ventana.geometry("1000x600")  # Ajustado para dar espacio para la tabla
 
 # Frame de entradas
 frame_entradas = ctk.CTkFrame(ventana)
@@ -106,12 +107,20 @@ boton_calcular = ctk.CTkButton(frame_entradas, text="Calcular", command=calcular
 boton_calcular.pack(pady=20)
 
 # Etiqueta para errores o resultados
-etiqueta_resultado = ctk.CTkLabel(frame_entradas, text="")
+etiqueta_resultado = ctk.CTkLabel(frame_entradas, text="", width=300, anchor="w")
 etiqueta_resultado.pack(pady=5)
 
 # Frame para la gráfica
 frame_grafica = ctk.CTkFrame(ventana)
 frame_grafica.pack(side=ctk.RIGHT, fill=ctk.BOTH, expand=True, padx=10, pady=10)
+
+# Frame para la tabla
+frame_tabla = ctk.CTkFrame(ventana)
+frame_tabla.pack(side=ctk.RIGHT, fill=ctk.BOTH, padx=10, pady=10, expand=True)
+
+# Etiqueta para mostrar la tabla
+etiqueta_resultado = ctk.CTkLabel(frame_tabla, text="", width=300, anchor="w", justify="left")
+etiqueta_resultado.pack(padx=10, pady=10)
 
 # Iniciar la ventana
 ventana.mainloop()
