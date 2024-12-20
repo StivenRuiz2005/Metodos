@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sympy as sp
 import customtkinter as ctk
 from tabulate import tabulate
+from tkinter import ttk
 
 # Configuración inicial de CustomTkinter
 ctk.set_appearance_mode("System")  # "Dark" o "Light"
@@ -22,8 +23,14 @@ def resolver_diferencias_finitas():
         # Crear el símbolo x
         x = sp.Symbol('x')
         
+        # Crear el símbolo de la función y
+        y = sp.Function('y')(x)
+        
         # Convertir la ecuación ingresada a una expresión simbólica
-        ecuacion = sp.sympify(ecuacion_str)
+        ecuacion = ecuacion_str.replace('y\'', 'y.diff(x)').replace('y\'\'', 'y.diff(x, 2)')
+        
+        # Usar sympy para convertir el string en una expresión
+        ecuacion = sp.sympify(ecuacion)
         
         # Discretización
         h = L / (n - 1)  # Paso de discretización
@@ -46,19 +53,22 @@ def resolver_diferencias_finitas():
         b[-1] = yn
         
         # Resolver el sistema de ecuaciones
-        y = np.linalg.solve(A, b)
+        y_solucion = np.linalg.solve(A, b)
         
-        # Mostrar resultados en formato tabla
-        resultados = [
-            [i, y[i]]
-            for i in range(n)
-        ]
-        print(tabulate(resultados, headers=["Punto", "Valor de y"]))
+        # Generar los valores de x para la tabla
+        x_vals = np.linspace(0, L, n)
+        
+        # Limpiar tabla previa
+        for row in tabla.get_children():
+            tabla.delete(row)
+        
+        # Agregar resultados a la tabla
+        for i in range(n):
+            tabla.insert("", "end", values=(round(x_vals[i], 4), round(y_solucion[i], 10)))
         
         # Graficar la solución
         fig, ax = plt.subplots(figsize=(8, 5))
-        x_vals = np.linspace(0, L, n)
-        ax.plot(x_vals, y, label="Solución de la Ecuación Diferencial", color="blue")
+        ax.plot(x_vals, y_solucion, label="Solución de la Ecuación Diferencial", color="blue")
         ax.set_title("Solución por Diferencias Finitas")
         ax.set_xlabel("x")
         ax.set_ylabel("y")
@@ -78,7 +88,7 @@ def resolver_diferencias_finitas():
 # Configuración de la ventana principal
 ventana = ctk.CTk()
 ventana.title("Método de Diferencias Finitas para Ecuaciones Diferenciales")
-ventana.geometry("900x600")
+ventana.state('zoomed')  # Maximizar ventana
 
 # Frame de entradas
 frame_entradas = ctk.CTkFrame(ventana)
@@ -113,9 +123,21 @@ boton_calcular.pack(pady=20)
 etiqueta_resultado = ctk.CTkLabel(frame_entradas, text="")
 etiqueta_resultado.pack(pady=5)
 
-# Frame para la gráfica
-frame_grafica = ctk.CTkFrame(ventana)
-frame_grafica.pack(side=ctk.RIGHT, fill=ctk.BOTH, expand=True, padx=10, pady=10)
+# Frame para la gráfica y la tabla
+frame_derecho = ctk.CTkFrame(ventana)
+frame_derecho.pack(side=ctk.RIGHT, fill=ctk.BOTH, expand=True, padx=10, pady=10)
+
+frame_grafica = ctk.CTkFrame(frame_derecho)
+frame_grafica.pack(side=ctk.TOP, fill=ctk.BOTH, expand=True)
+
+frame_tabla = ctk.CTkFrame(frame_derecho)
+frame_tabla.pack(side=ctk.BOTTOM, fill=ctk.BOTH, expand=True, pady=10)
+
+# Configuración de la tabla
+tabla = ttk.Treeview(frame_tabla, columns=("x", "y"), show="headings", height=10)
+tabla.heading("x", text="x")
+tabla.heading("y", text="y")
+tabla.pack(side=ctk.TOP, fill=ctk.BOTH, expand=True)
 
 # Iniciar la ventana
 ventana.mainloop()
