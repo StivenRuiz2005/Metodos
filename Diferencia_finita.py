@@ -99,7 +99,6 @@ def construir_ecuacion():
         etiqueta_resultado.configure(text=f"Error al construir la ecuación: {str(e)}")
         return None
 
-# [El resto de las funciones permanecen igual]
 def resolver_diferencias_finitas():
     try:
         # Obtener valores de las condiciones de frontera y dominio
