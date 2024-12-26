@@ -146,34 +146,34 @@ def resolver_diferencias_finitas():
         # Crear la matriz A y el vector b
         A = np.zeros((n, n))
         b = np.zeros(n)
-        x_vals = np.linspace(0, L, puntos_totales)
+        x_vals = np.linspace(0, L, puntos_totales) # Se generan los puntos en el dominio para evaluar las funciones p, q y f.
 
         for i in range(n):
             xi = x_vals[i + 1]
 
             try:
-                p_val = p_x(xi)
-                q_val = q_x(xi)
+                p_val = p_x(xi) # Se evalúan los coeficientes en el punto xi.
+                q_val = q_x(xi) 
                 f_val = f_x(xi)
             except Exception as e:
                 etiqueta_resultado.configure(text=f"Error al evaluar coeficientes en x={xi}: {str(e)}")
                 return
 
-            A[i, i] = -2 + h**2 * q_val
+            A[i, i] = -2 + h**2 * q_val # A es una matriz tridiagonal que modela las interacciones entre los puntos interiores y considera los coeficientes de la ecuación diferencial.
             if i > 0:
-                A[i, i - 1] = 1 - (h / 2) * p_val
+                A[i, i - 1] = 1 - (h / 2) * p_val # Se ajustan los valores de A para considerar los coeficientes de la ecuación diferencial.
             if i < n - 1:
-                A[i, i + 1] = 1 + (h / 2) * p_val
+                A[i, i + 1] = 1 + (h / 2) * p_val # Se ajustan los valores de A para considerar los coeficientes de la ecuación diferencial.
 
-            b[i] = h**2 * f_val
+            b[i] = h**2 * f_val # b es un vector que modela los términos independientes de la ecuación diferencial.
 
-        b[0] -= (1 - (h / 2) * p_x(x_vals[1])) * y0
-        b[-1] -= (1 + (h / 2) * p_x(x_vals[-2])) * yn
+        b[0] -= (1 - (h / 2) * p_x(x_vals[1])) * y0 # Se ajustan los valores de b para considerar las condiciones de frontera.
+        b[-1] -= (1 + (h / 2) * p_x(x_vals[-2])) * yn # Se ajustan los valores de b para considerar las condiciones de frontera.
 
         # Resolver el sistema
         try:
-            y_interior = np.linalg.solve(A, b)
-            y_solucion = np.concatenate(([y0], y_interior, [yn]))
+            y_interior = np.linalg.solve(A, b) # Se resuelve el sistema de ecuaciones lineales para obtener los valores de y en los puntos interiores.
+            y_solucion = np.concatenate(([y0], y_interior, [yn])) # Se concatenan los valores de y en los puntos interiores con las condiciones de frontera.
             
             # Limpiar tabla previa
             for row in tabla.get_children():
