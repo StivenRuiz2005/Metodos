@@ -1,6 +1,12 @@
 # Metodos
 
-## INTEGRANTES:  
+### Metodos implementados: 
+
+1. `Taylor`  
+2. `Newton Raphson`  
+3. `Diferencia finitas`  
+
+### INTEGRANTES:  
 CARLOS STIVEN RUIZ ROJAS 2259629-3743  
 JHONY FERNANDO DUQUE VILLADA 2259398-3743  
 ESTEBAN REVELO 2067507-3743  
@@ -16,7 +22,7 @@ Este proyecto utiliza varias bibliotecas de Python. Asegúrate de tener instalad
 4. `matplotlib`: Para generar gráficos interactivos y dinámicos.  
 5. 'tabulate' : Para generar tablas dinámicas.  
   
-#### Instalación de las bibliotecas  
+### Instalación de las bibliotecas  
   
 Para instalar estas bibliotecas, puedes usar el siguiente comando en tu terminal o línea de comandos, asegurandose tener python:  
   
